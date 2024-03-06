@@ -42,13 +42,13 @@ fn insert_input_file<S: AsRef<OsStr>, P: AsRef<Path>>(
 
 /// A coverage map as used by AFL.
 pub struct AflMap {
-    data: [u8; 65536],
+    data: Vec<u8>,
 }
 
 impl AflMap {
     /// Create an empty map.
     pub fn new() -> AflMap {
-        AflMap { data: [0; 65536] }
+        AflMap { data: Vec::new() }
     }
 
     /// Load a map from disk.
@@ -60,11 +60,6 @@ impl AflMap {
                 path.as_ref().display()
             )
         })?;
-        ensure!(
-            data.len() == 65536,
-            "The file to load the coverage map from has the wrong size ({})",
-            data.len()
-        );
 
         let mut result = AflMap::new();
         result.data.copy_from_slice(&data);
